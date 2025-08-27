@@ -4,6 +4,9 @@ import re
 from datetime import datetime
 from typing import Dict, List
 
+from rich.console import Console
+from rich.table import Table
+
 from ..database import crud
 from ..database.setup import session
 from ..models import Client, Project, Task
@@ -16,12 +19,16 @@ from .constants import (
 
 EMAIL_REGEX = r"^\S+@\S+\.\S+$"
 
+
 def show_menu(main_menu: bool = False) -> int:
     """Displays the main menu and returns the user's choice."""
     if main_menu:
-        click.echo("\n================================== \n👋 Hello, \nWelcome to TackleTask Tracker - your productivity partner. \n")
+        click.echo(
+            "\n================================== \n👋 Hello, \nWelcome to TackleTask Tracker - your productivity partner. \n"
+        )
     else:
-        click.echo("\n---------------------------------- \n \nHow else can I help you?")
+        click.echo(
+            "\n---------------------------------- \n \nHow else can I help you?")
 
     for key, value in MAIN_MENU_OPTIONS.items():
         click.echo(f"{key}. {value}")
@@ -32,11 +39,12 @@ def show_menu(main_menu: bool = False) -> int:
             if choice in MAIN_MENU_OPTIONS:
                 return choice
             else:
-                click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
+                click.echo(
+                    "\n⚠️\nEntry invalid! Please enter a valid option. \n")
         except click.Abort:
             raise
         except Exception:
-            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\nEntry invalid! Please enter a valid option. \n")
 
 
 def submenu(options: Dict[int, str]) -> int:
@@ -50,11 +58,12 @@ def submenu(options: Dict[int, str]) -> int:
             if sub_choice in options:
                 return sub_choice
             else:
-                click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
+                click.echo(
+                    "\n⚠️\nEntry invalid! Please enter a valid option. \n")
         except click.Abort:
             raise
         except Exception:
-            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\nEntry invalid! Please enter a valid option. \n")
 
 
 def add_menu() -> None:
@@ -84,7 +93,9 @@ def add_client() -> None:
     client = Client(name=name, email=email, phone=phone)
     created_client = crud.create_client(session, client)
     click.echo("\n✔️\nClient added successfully.")
-    click.echo(f"ID: {created_client.id}, Name: {created_client.name}, Email: {created_client.email}, Phone: {created_client.phone}")
+    click.echo(
+        f"ID: {created_client.id}, Name: {created_client.name}, Email: {created_client.email}, Phone: {created_client.phone}"
+    )
 
 
 def add_project() -> None:
@@ -107,7 +118,10 @@ def add_project() -> None:
     )
     created_project = crud.create_project(session, project)
     click.echo("\n✔️\nProject added successfully. \n")
-    click.echo(f"ID: {created_project.id}, Title: {created_project.title}, Status: {created_project.project_status}, Deadline: {created_project.deadline}, Client ID: {created_project.client_id}")
+    click.echo(
+        f"ID: {created_project.id}, Title: {created_project.title}, Status: {created_project.project_status}, Deadline: {created_project.deadline}, Client ID: {created_project.client_id}"
+    )
+
 
 def add_task() -> None:
     """Prompts the user for task information and adds the task to the database."""
@@ -123,7 +137,9 @@ def add_task() -> None:
     )
     created_task = crud.create_task(session, task)
     click.echo("\n✔️\nTask added successfully. \n")
-    click.echo(f"ID: {created_task.id}, Name: {created_task.name}, Status: {created_task.status}, Project ID: {created_task.project_id}, Earnings: {created_task.earnings}")
+    click.echo(
+        f"ID: {created_task.id}, Name: {created_task.name}, Status: {created_task.status}, Project ID: {created_task.project_id}, Earnings: {created_task.earnings}"
+    )
 
 
 def view_menu() -> None:
@@ -146,19 +162,30 @@ def view_clients() -> None:
     """Displays all clients from the database."""
     clients = crud.get_clients(session)
     if not clients:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
+
+    table = Table(title="Clients")
+    table.add_column("ID", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Name", style="magenta")
+    table.add_column("Email", style="green")
+    table.add_column("Phone", style="yellow")
+
     for c in clients:
-        click.echo(f"ID: {c.id}, Name: {c.name}, Email: {c.email}, Phone: {c.phone}")
+        table.add_row(str(c.id), c.name, c.email, c.phone)
+
+    console = Console()
+    console.print(table)
 
 
 def view_projects() -> None:
     """Displays all projects from the database, with filtering options."""
     projects = crud.get_projects(session)
     if not projects:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
 
+    click.echo("\n____Filter Project by:____")
     filter_opt = submenu(FILTER_PROJECTS_OPTIONS)
     if filter_opt == 0:
         return
@@ -178,21 +205,37 @@ def view_projects() -> None:
         projects = crud.get_projects(session)
 
     if not projects:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
+
+    table = Table(title="Projects")
+    table.add_column("ID", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Title", style="magenta")
+    table.add_column("Status", style="green")
+    table.add_column("Deadline", style="yellow")
+    table.add_column("Client ID", justify="right", style="cyan")
+
     for p in projects:
-        click.echo(
-            f"ID: {p.id}, Title: {p.title}, Status: {p.project_status}, Deadline: {p.deadline}, Client ID: {p.client_id}"
+        table.add_row(
+            str(p.id),
+            p.title,
+            p.project_status,
+            str(p.deadline),
+            str(p.client_id),
         )
+
+    console = Console()
+    console.print(table)
 
 
 def view_tasks() -> None:
     """Displays all tasks from the database, with filtering options."""
     tasks = crud.get_tasks(session)
     if not tasks:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
 
+    click.echo("\n____Filter Tasks by:____")
     filter_opt = submenu(FILTER_TASKS_OPTIONS)
     if filter_opt == 0:
         return
@@ -212,19 +255,31 @@ def view_tasks() -> None:
         tasks = crud.get_tasks(session)
 
     if not tasks:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
+
+    table = Table(title="Tasks")
+    table.add_column("ID", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Name", style="magenta")
+    table.add_column("Status", style="green")
+    table.add_column("Project ID", justify="right", style="cyan")
+    table.add_column("Earnings", justify="right", style="green")
+
     for t in tasks:
-        click.echo(
-            f"ID: {t.id}, Name: {t.name}, Status: {t.status}, Project ID: {t.project_id}, Earnings: {t.earnings}"
+        table.add_row(
+            str(t.id), t.name, t.status, str(
+                t.project_id), f"Ksh. {t.earnings}"
         )
+
+    console = Console()
+    console.print(table)
 
 
 def view_earnings() -> None:
     """Displays total earnings or earnings for a specific project."""
     projects = crud.get_projects(session)
     if not projects:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
         return
     while True:
         try:
@@ -243,9 +298,9 @@ def view_earnings() -> None:
                     )
                     break
                 else:
-                    click.echo("\n⚠️\n Data not available! Add data first. \n")
+                    click.echo("\n⚠️\nData not available! Add data first. \n")
         except Exception:
-            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\nEntry invalid! Please enter a valid option. \n")
 
 
 def update_menu() -> None:
@@ -277,9 +332,11 @@ def update_client() -> None:
         client.phone = click.prompt("New phone", default=client.phone)
         updated_client = crud.update_client(session, client_id, client)
         click.echo("\n✔️\nClient updated succesfully. \n")
-        click.echo(f"ID: {updated_client.id}, Name: {updated_client.name}, Email: {updated_client.email}, Phone: {updated_client.phone}")
+        click.echo(
+            f"ID: {updated_client.id}, Name: {updated_client.name}, Email: {updated_client.email}, Phone: {updated_client.phone}"
+        )
     else:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
 
 
 def update_project() -> None:
@@ -308,9 +365,11 @@ def update_project() -> None:
         )
         updated_project = crud.update_project(session, project_id, project)
         click.echo("\n✔️\nProject updated succesfully. \n")
-        click.echo(f"ID: {updated_project.id}, Title: {updated_project.title}, Status: {updated_project.project_status}, Deadline: {updated_project.deadline}, Client ID: {updated_project.client_id}")
+        click.echo(
+            f"ID: {updated_project.id}, Title: {updated_project.title}, Status: {updated_project.project_status}, Deadline: {updated_project.deadline}, Client ID: {updated_project.client_id}"
+        )
     else:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
 
 
 def update_task() -> None:
@@ -332,9 +391,11 @@ def update_task() -> None:
         )
         updated_task = crud.update_task(session, task_id, task)
         click.echo("\n✔️\nTask updated succesfully. \n")
-        click.echo(f"ID: {updated_task.id}, Name: {updated_task.name}, Status: {updated_task.status}, Project ID: {updated_task.project_id}, Earnings: {updated_task.earnings}")
+        click.echo(
+            f"ID: {updated_task.id}, Name: {updated_task.name}, Status: {updated_task.status}, Project ID: {updated_task.project_id}, Earnings: {updated_task.earnings}"
+        )
     else:
-        click.echo("\n⚠️\n Data not available! Add data first. \n")
+        click.echo("\n⚠️\nData not available! Add data first. \n")
 
 
 def delete_menu() -> None:
@@ -388,5 +449,5 @@ def cli() -> None:
         choice = show_menu()
 
     click.echo(
-        "\nThank you for using TackleTask Tracker. \nGoodbye!😉 \n===========================================\n"
+        "\nThank you for using TackleTask Tracker. \nGoodbye!😉 \n=========================================== \n"
     )

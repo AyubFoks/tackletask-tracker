@@ -14,3 +14,8 @@ class Task(Base):
     status = Column(String, default="Pending")
 
     project = relationship("Project", back_populates="tasks")
+
+    @property
+    def earnings(self) -> float:
+        """Calculates the earnings for a task."""
+        return self.hours_worked * self.rate_per_hour

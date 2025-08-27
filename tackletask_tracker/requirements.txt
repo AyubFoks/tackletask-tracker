@@ -1,3 +1,4 @@
 sqlalchemy
 click
 pytest
+rich
