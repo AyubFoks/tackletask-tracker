@@ -17,11 +17,11 @@ def main_menu():
                 return choice
             else:
                 click.echo(
-                    "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                    "\n⚠️\n Entry invalid! Please enter a valid option. \n")
         except click.Abort:
             raise
         except Exception:
-            click.echo("\n⚠️ Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
 
 
 def submenu(options):
@@ -35,11 +35,11 @@ def submenu(options):
                 return sub_choice
             else:
                 click.echo(
-                    "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                    "\n⚠️\n Entry invalid! Please enter a valid option. \n")
         except click.Abort:
             raise
         except Exception:
-            click.echo("\n⚠️ Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
 
 
 def add_menu():
@@ -56,7 +56,7 @@ def add_menu():
             client = Client(name=name, email=email, phone=phone)
             session.add(client)
             session.commit()
-            click.echo("\n✔️ Client added successfully.")
+            click.echo("\n✔️\nClient added successfully.")
             break
         elif choice == 2:
             title = click.prompt("Project title")
@@ -71,7 +71,7 @@ def add_menu():
             )
             session.add(project)
             session.commit()
-            click.echo("\n✔️ Project added successfully. \n")
+            click.echo("\n✔️\nProject added successfully. \n")
             break
         elif choice == 3:
             name = click.prompt("Task name")
@@ -86,7 +86,7 @@ def add_menu():
             )
             session.add(task)
             session.commit()
-            click.echo("\n✔️ Task added successfully. \n")
+            click.echo("\n✔️\nTask added successfully. \n")
             break
 
 
@@ -100,7 +100,7 @@ def view_menu():
         elif choice == 1:
             clients = session.query(Client).all()
             if not clients:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
                 continue
             for c in clients:
                 click.echo(
@@ -109,7 +109,7 @@ def view_menu():
         elif choice == 2:
             projects = session.query(Project).all()
             if not projects:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
                 continue
             while True:
                 filter_opt = click.prompt(
@@ -128,11 +128,11 @@ def view_menu():
                     pass
                 else:
                     click.echo(
-                        "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                        "\n⚠️\n Entry invalid! Please enter a valid option. \n")
                     continue
                 filtered_projects = query.all()
                 if not filtered_projects:
-                    click.echo("\n⚠️ Data not available! Add data first. \n")
+                    click.echo("\n⚠️\n Data not available! Add data first. \n")
                     break
                 for p in filtered_projects:
                     click.echo(
@@ -142,7 +142,7 @@ def view_menu():
         elif choice == 3:
             tasks = session.query(Task).all()
             if not tasks:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
                 continue
             while True:
                 filter_opt = click.prompt(
@@ -161,11 +161,11 @@ def view_menu():
                     pass
                 else:
                     click.echo(
-                        "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                        "\n⚠️\n Entry invalid! Please enter a valid option. \n")
                     continue
                 filtered_tasks = query.all()
                 if not filtered_tasks:
-                    click.echo("\n⚠️ Data not available! Add data first. \n")
+                    click.echo("\n⚠️\n Data not available! Add data first. \n")
                     break
                 for t in filtered_tasks:
                     click.echo(
@@ -175,7 +175,7 @@ def view_menu():
         elif choice == 4:
             projects = session.query(Project).all()
             if not projects:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
                 continue
             while True:
                 try:
@@ -189,14 +189,14 @@ def view_menu():
                         project = session.query(Project).get(project_id)
                         if project:
                             click.echo(
-                                f"Earnings for Project {project_id}: {project.project_earnings}")
+                                f"Earnings for Project {project_id}: Ksh. {project.project_earnings}")
                             break
                         else:
                             click.echo(
-                                "\n⚠️ Data not available! Add data first. \n")
+                                "\n⚠️\n Data not available! Add data first. \n")
                 except Exception:
                     click.echo(
-                        "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                        "\n⚠️\n Entry invalid! Please enter a valid option. \n")
             break
 
 
@@ -215,10 +215,10 @@ def update_menu():
                 client.email = click.prompt("New email", default=client.email)
                 client.phone = click.prompt("New phone", default=client.phone)
                 session.commit()
-                click.echo("\n✔️ Client updated succesfully. \n")
+                click.echo("\n✔️\nClient updated succesfully. \n")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
         elif choice == 2:
             project_id = click.prompt("Enter Project ID to update", type=int)
             project = session.query(Project).get(project_id)
@@ -235,10 +235,10 @@ def update_menu():
                 project.project_status = click.prompt("New status", type=click.Choice(
                     ['Pending', 'In Progress', 'Completed']), default=project.project_status)
                 session.commit()
-                click.echo("\n✔️ Project updated succesfully. \n")
+                click.echo("\n✔️\nProject updated succesfully. \n")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
         elif choice == 3:
             task_id = click.prompt("Enter Task ID to update", type=int)
             task = session.query(Task).get(task_id)
@@ -251,10 +251,10 @@ def update_menu():
                 task.status = click.prompt("New status", type=click.Choice(
                     ['Pending', 'In Progress', 'Completed']), default=task.status)
                 session.commit()
-                click.echo("\n✔️ Task updated succesfully. \n")
+                click.echo("\n✔️\nTask updated succesfully. \n")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
 
 
 def delete_menu():
@@ -274,7 +274,7 @@ def delete_menu():
                     "\n Client and all associated projects deleted.")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
         elif choice == 2:
             project_id = click.prompt("Enter Project ID to delete", type=int)
             project = session.query(Project).get(project_id)
@@ -284,7 +284,7 @@ def delete_menu():
                 click.echo("\nProject and all associated tasks deleted. \n")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
         elif choice == 3:
             task_id = click.prompt("Enter Task ID to delete", type=int)
             task = session.query(Task).get(task_id)
@@ -294,7 +294,7 @@ def delete_menu():
                 click.echo("\nTask deleted. \n")
                 break
             else:
-                click.echo("\n⚠️ Data not available! Add data first. \n")
+                click.echo("\n⚠️\n Data not available! Add data first. \n")
 
 
 def prompt_how_else():
@@ -312,11 +312,11 @@ def prompt_how_else():
                 return choice
             else:
                 click.echo(
-                    "\n⚠️ Entry invalid! Please enter a valid option. \n")
+                    "\n⚠️\n Entry invalid! Please enter a valid option. \n")
         except click.Abort:
             raise
         except Exception:
-            click.echo("\n⚠️ Entry invalid! Please enter a valid option. \n")
+            click.echo("\n⚠️\n Entry invalid! Please enter a valid option. \n")
 
 
 @click.command()
