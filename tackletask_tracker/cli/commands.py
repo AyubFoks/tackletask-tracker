@@ -456,7 +456,6 @@ def main():
 
     if args.command:
         # This is a placeholder for future command-line specific functionality
-        # For now, we just run the interactive CLI
         cli()
     else:
         cli()
