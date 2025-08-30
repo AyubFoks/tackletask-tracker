@@ -38,7 +38,7 @@ TackleTask Tracker is a simple command-line application for tracking clients, pr
 To run the application, use the following command from the project's root directory:
 
 ```bash
-python3 -m tackletask_tracker
+python3 main.py
 ```
 
 This will launch the command-line interface, where you can add, view, update, and delete clients, projects, and tasks.
@@ -46,9 +46,7 @@ This will launch the command-line interface, where you can add, view, update, an
 ## Dependencies
 
 *   [SQLAlchemy](https://www.sqlalchemy.org/): For database interactions.
-*   [Click](https://click.palletsprojects.com/): For creating the command-line interface.
 *   [Rich](https://rich.readthedocs.io/): For beautiful and informative table formatting.
-*   [Pytest](https://docs.pytest.org/): For running tests.
 
 ## Contributing
 

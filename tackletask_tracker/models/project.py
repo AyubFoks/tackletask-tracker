@@ -15,3 +15,8 @@ class Project(Base):
 
     client = relationship("Client", back_populates="projects")
     tasks = relationship("Task", back_populates="project", cascade="all, delete-orphan")
+
+    @property
+    def project_earnings(self) -> float:
+        """Calculates the total earnings for a project."""
+        return sum(task.earnings for task in self.tasks)
